@@ -6,8 +6,6 @@ import com.youcode.citronix.service.FarmService;
 import com.youcode.citronix.web.vm.farm.FarmEditVM;
 import com.youcode.citronix.web.vm.farm.FarmResponseVM;
 import com.youcode.citronix.web.vm.farm.FarmVM;
-import com.youcode.citronix.web.vm.mapper.FarmEditVmMapper;
-import com.youcode.citronix.web.vm.mapper.FarmResponseVmMapper;
 import com.youcode.citronix.web.vm.mapper.FarmVmMapper;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -24,32 +22,27 @@ import java.util.UUID;
 @RequestMapping("/api/v1/farms")
 public class FarmController {
 
-
     private final FarmService farmService;
     private final FarmVmMapper farmVmMapper;
-    private final FarmResponseVmMapper farmResponseVmMapper;
-    private final FarmEditVmMapper farmEditVmMapper;
 
-    public FarmController(@Qualifier("farmServiceImpl1") FarmService farmService, FarmVmMapper farmVmMapper, FarmResponseVmMapper farmResponseVmMapper, FarmEditVmMapper farmEditVmMapper) {
+    public FarmController(@Qualifier("farmServiceImpl1") FarmService farmService, FarmVmMapper farmVmMapper) {
         this.farmService = farmService;
         this.farmVmMapper = farmVmMapper;
-        this.farmResponseVmMapper = farmResponseVmMapper;
-        this.farmEditVmMapper = farmEditVmMapper;
     }
 
     @PostMapping("/save")
     public ResponseEntity<FarmResponseVM> save(@RequestBody @Valid FarmVM farmVM){
         Farm farm = farmVmMapper.toEntity(farmVM);
         Farm savedFarm = farmService.save(farm);
-        FarmResponseVM farmResponseVM = farmResponseVmMapper.toVM(savedFarm);
+        FarmResponseVM farmResponseVM = farmVmMapper.toResponseVM(savedFarm);
         return new ResponseEntity<>(farmResponseVM , HttpStatus.CREATED);
     }
 
     @PutMapping("/update")
     public ResponseEntity<FarmResponseVM> update(@RequestBody @Valid FarmEditVM farmEditVM){
-        Farm farm = farmEditVmMapper.toEntity(farmEditVM);
+        Farm farm = farmVmMapper.toEntity(farmEditVM);
         Farm updatedFarm = farmService.update(farm);
-        FarmResponseVM farmResponseVM = farmResponseVmMapper.toVM(updatedFarm);
+        FarmResponseVM farmResponseVM = farmVmMapper.toResponseVM(updatedFarm);
         return new ResponseEntity<>(farmResponseVM , HttpStatus.OK);
     }
 
@@ -62,14 +55,14 @@ public class FarmController {
     @GetMapping("/{farm_id}")
     public ResponseEntity<FarmResponseVM> findById(@PathVariable UUID farm_id){
         Farm farm = farmService.findById(farm_id);
-        FarmResponseVM farmResponseVM = farmResponseVmMapper.toVM(farm);
+        FarmResponseVM farmResponseVM = farmVmMapper.toResponseVM(farm);
         return new ResponseEntity<>(farmResponseVM , HttpStatus.OK);
     }
 
     @GetMapping("/all")
     public ResponseEntity<Page<FarmResponseVM>> findAll(Pageable pageable){
         Page<Farm> farms = farmService.findAll(pageable);
-        Page<FarmResponseVM> farmResponseVM = farms.map(farmResponseVmMapper::toVM);
+        Page<FarmResponseVM> farmResponseVM = farms.map(farmVmMapper::toResponseVM);
         return new ResponseEntity<>(farmResponseVM , HttpStatus.OK);
     }
 }

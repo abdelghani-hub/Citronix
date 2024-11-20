@@ -14,6 +14,7 @@ public class Farm {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
+    @JsonIgnore
     private UUID id;
 
     private String name;
@@ -100,5 +101,9 @@ public class Farm {
     public Double getTotalFieldsArea(){
         Double total = this.fields.stream().mapToDouble(Field::getArea).sum();
         return total;
+    }
+
+    public Double getRemainingArea(){
+        return this.area - this.getTotalFieldsArea();
     }
 }
