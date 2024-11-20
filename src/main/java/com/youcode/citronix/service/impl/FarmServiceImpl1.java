@@ -11,6 +11,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -37,16 +39,20 @@ public class FarmServiceImpl1 implements FarmService {
             throw new RuntimeException("Farm must have at least one field");
         }
 
-        if(farm.getArea() <= farm.getFields().stream().mapToDouble(Field::getArea).sum()){
+        if(farm.getArea() <= farm.getTotalFieldsArea()){
             throw new RuntimeException("Farm area must be greater than the sum of fields area");
         }
-
-        farm.getFields().forEach(
-                field -> validate(farm, field)
-        );
+        // Validate fields
+        List<Field> fields = farm.getFields();
+        farm.setFields(new ArrayList<>());
+        fields.forEach((Field field) -> {
+                fieldService.validate(farm, field);
+                farm.addField(field);
+        });
 
         Farm savedFarm = farmRepository.save(farm);
         farm.getFields().forEach(field -> {
+            savedFarm.setFields(new ArrayList<>());
             field.setFarm(savedFarm);
             fieldService.save(field);
         });
@@ -86,28 +92,5 @@ public class FarmServiceImpl1 implements FarmService {
         Farm farm = farmRepository.findById(farmId).orElseThrow(() -> new ResourceNotFoundException("Farm"));
         farm.getFields().forEach(field -> fieldService.delete(field.getId()));
         farmRepository.delete(farm);
-    }
-
-    private void validate(Farm farm, Field newField) {
-        double totalFieldsArea = farm.getTotalFieldsArea();
-
-        // Constraint n°1
-        if (newField.getArea() < 0.1) {
-            throw new RuntimeException("Field area must be at least 0.1 hectares (1,000 m²)");
-        }
-
-        // Constraint n°2
-        if (newField.getArea() > (farm.getArea() * 0.5)) {
-            throw new RuntimeException("Field area cannot exceed 50% of the farm's total area");
-        }
-
-        if (totalFieldsArea >= farm.getArea()) {
-            throw new RuntimeException("Total field area must be less than the farm's total area");
-        }
-
-        // Constraint n°3
-        if (farm.getFields().size() >= 10) {
-            throw new RuntimeException("A farm cannot have more than 10 fields");
-        }
     }
 }

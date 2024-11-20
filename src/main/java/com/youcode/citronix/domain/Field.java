@@ -38,6 +38,7 @@ public class Field {
     private List<Tree> trees;
 
     public Field(){}
+
     public Field(UUID id, double area, List<Harvest> harvests, Farm farm, List<Tree> trees) {
         this.id = id;
         this.area = area;

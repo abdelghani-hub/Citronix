@@ -2,6 +2,7 @@ package com.youcode.citronix.service.impl;
 
 import com.youcode.citronix.domain.Farm;
 import com.youcode.citronix.domain.Field;
+import com.youcode.citronix.exception.ResourceNotFoundException;
 import com.youcode.citronix.repository.FarmRepository;
 import com.youcode.citronix.repository.FieldRepository;
 import com.youcode.citronix.service.FieldService;
@@ -24,18 +25,19 @@ public class FieldServiceImpl implements FieldService {
 
     @Override
     public Field save(Field field) {
-        Farm farm = farmRepository.findById(field.getFarm().getId()).orElseThrow(() ->
-                new RuntimeException("Farm not found"));
-
+        this.validate(field.getFarm(), field);
         return fieldRepository.save(field);
     }
 
     @Override
-    public Field update(UUID fieldUuid, Field field) {
-        Field existingField = fieldRepository.findById(fieldUuid).orElseThrow(() ->
-                new RuntimeException("Field not found"));
+    public Field update(Field field) {
+        Field existingField = fieldRepository.findById(field.getId()).orElseThrow(() ->
+                new ResourceNotFoundException("Field"));
 
         Farm farm = existingField.getFarm();
+        farm.removeField(existingField);
+        validate(farm, field);
+        farm.addField(field);
 
         existingField.setArea(field.getArea());
         return fieldRepository.save(existingField);
@@ -44,7 +46,7 @@ public class FieldServiceImpl implements FieldService {
     @Override
     public Field findById(UUID fieldUuid) {
         return fieldRepository.findById(fieldUuid).orElseThrow(() ->
-                new RuntimeException("Field not found"));
+                new ResourceNotFoundException("Field"));
     }
 
     @Override
@@ -53,9 +55,40 @@ public class FieldServiceImpl implements FieldService {
     }
 
     @Override
-    public void delete(UUID fieldUuid) {
-        Field field = fieldRepository.findById(fieldUuid).orElseThrow(() ->
-                new RuntimeException("Field not found"));
+    public Page<Field> findAllByFarm(UUID farmId, Pageable pageable) {
+        Farm farm = farmRepository.findById(farmId).orElseThrow(() ->
+                new ResourceNotFoundException("Farm"));
+        return fieldRepository.findAllByFarm(farm, pageable);
+    }
+
+    @Override
+    public void delete(UUID fieldId) {
+        Field field = fieldRepository.findById(fieldId).orElseThrow(() ->
+                new ResourceNotFoundException("Field"));
         fieldRepository.delete(field);
+    }
+
+    @Override
+    public void validate(Farm farm, Field newField) {
+        double totalFieldsAreaExpected = farm.getTotalFieldsArea() + newField.getArea();
+
+        // Constraint n°1
+        if (newField.getArea() < 0.1) {
+            throw new RuntimeException("Field area must be at least 0.1 hectares (1,000 m²)");
+        }
+
+        // Constraint n°2
+        if (newField.getArea() > (farm.getArea() * 0.5)) {
+            throw new RuntimeException("Field area cannot exceed 50% of the farm's total area");
+        }
+
+        if (totalFieldsAreaExpected >= farm.getArea()) {
+            throw new RuntimeException("Total field area must be less than the farm's total area");
+        }
+
+        // Constraint n°3
+        if (farm.getFields().size() >= 10) {
+            throw new RuntimeException("A farm cannot have more than 10 fields");
+        }
     }
 }
