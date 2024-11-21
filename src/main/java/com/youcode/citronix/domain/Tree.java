@@ -7,15 +7,12 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.UUID;
 
 
 @Entity
-@Getter
-@Setter
-@NoArgsConstructor
-@AllArgsConstructor
 public class Tree {
 
     @Id
@@ -29,12 +26,58 @@ public class Tree {
     @JoinColumn(name = "field_id")
     private Field field;
 
-    @OneToMany(mappedBy = "tree")
-    private List<HarvestDetail> harvestDetails;
+//    @OneToMany(mappedBy = "tree")
+//    private List<HarvestDetail> harvestDetails;
 
+    public Tree() {
+    }
+
+    public Tree(UUID id, LocalDate plantingDate, Field field){ //, List<HarvestDetail> harvestDetails) {
+        this.id = id;
+        this.plantingDate = plantingDate;
+        this.field = field;
+//        this.harvestDetails = harvestDetails;
+    }
+
+    public UUID getId() {
+        return id;
+    }
+
+    public void setId(UUID id) {
+        this.id = id;
+    }
+
+    public LocalDate getPlantingDate() {
+        return plantingDate;
+    }
+
+    public Tree setPlantingDate(LocalDate plantingDate) {
+        this.plantingDate = plantingDate;
+        return this;
+    }
+
+    public Field getField() {
+        return field;
+    }
+
+    public void setField(Field field) {
+        this.field = field;
+    }
+
+//    public List<HarvestDetail> getHarvestDetails() {
+//        return harvestDetails;
+//    }
+
+//    public void setHarvestDetails(List<HarvestDetail> harvestDetails) {
+//        this.harvestDetails = harvestDetails;
+//    }
 
     public int getAge() {
-        return plantingDate != null ? LocalDate.now().getYear() - plantingDate.getYear() : 0;
+        if(plantingDate == null )
+            return 0;
+        // calc diff between planting date and now
+        long diff = ChronoUnit.MILLIS.between(plantingDate.atStartOfDay(), LocalDate.now().atStartOfDay());
+        return (int) (diff / (1000 * 60 * 60 * 24 * 365));
     }
 
     public double getAnnualProductivityForSeason() {
@@ -46,6 +89,7 @@ public class Tree {
         } else if (age <= 20) {
             return 20.0;
         }
+        // Constraint n°5
         return 0;
     }
 

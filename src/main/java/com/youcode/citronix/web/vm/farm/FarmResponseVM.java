@@ -6,13 +6,10 @@ import jakarta.validation.constraints.Positive;
 
 public class FarmResponseVM {
 
-    @NotBlank(message = "Name is required.")
     private String name;
 
-    @NotBlank(message = "Location is required.")
     private String location;
 
-    @Positive(message = "Total Area must be positive.")
     private double area;
 
 
