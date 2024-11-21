@@ -1,9 +1,18 @@
 package com.youcode.citronix.domain;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 import java.util.UUID;
 
 @Entity
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
 public class HarvestDetail {
 
     @Id
@@ -13,52 +22,11 @@ public class HarvestDetail {
     private double quantity;
 
     @ManyToOne
-    @JoinColumn(name = "harvest_id")
+    @JoinColumn(name = "harvest_uuid")
     private Harvest harvest;
 
     @ManyToOne
-    @JoinColumn(name = "tree_id")
+    @JoinColumn(name = "tree_uuid")
     private Tree tree;
 
-    public HarvestDetail() {
-    }
-
-    public HarvestDetail(UUID id, double quantity, Harvest harvest, Tree tree) {
-        this.id = id;
-        this.quantity = quantity;
-        this.harvest = harvest;
-        this.tree = tree;
-    }
-
-    public UUID getId() {
-        return id;
-    }
-
-    public void setId(UUID id) {
-        this.id = id;
-    }
-
-    public double getQuantity() {
-        return quantity;
-    }
-
-    public void setQuantity(double quantity) {
-        this.quantity = quantity;
-    }
-
-    public Harvest getHarvest() {
-        return harvest;
-    }
-
-    public void setHarvest(Harvest harvest) {
-        this.harvest = harvest;
-    }
-
-    public Tree getTree() {
-        return tree;
-    }
-
-    public void setTree(Tree tree) {
-        this.tree = tree;
-    }
 }

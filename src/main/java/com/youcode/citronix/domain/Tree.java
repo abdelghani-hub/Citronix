@@ -4,7 +4,6 @@ import jakarta.persistence.*;
 
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
-import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -21,17 +20,17 @@ public class Tree {
     @JoinColumn(name = "field_id")
     private Field field;
 
-    @OneToMany(mappedBy = "tree")
-    private List<HarvestDetail> harvestDetails;
+//    @OneToMany(mappedBy = "tree")
+//    private List<HarvestDetail> harvestDetails;
 
     public Tree() {
     }
 
-    public Tree(UUID id, LocalDate plantingDate, Field field, List<HarvestDetail> harvestDetails) {
+    public Tree(UUID id, LocalDate plantingDate, Field field){ //, List<HarvestDetail> harvestDetails) {
         this.id = id;
         this.plantingDate = plantingDate;
         this.field = field;
-        this.harvestDetails = harvestDetails;
+//        this.harvestDetails = harvestDetails;
     }
 
     public UUID getId() {
@@ -59,18 +58,20 @@ public class Tree {
         this.field = field;
     }
 
-    public List<HarvestDetail> getHarvestDetails() {
-        return harvestDetails;
-    }
+//    public List<HarvestDetail> getHarvestDetails() {
+//        return harvestDetails;
+//    }
 
-    public void setHarvestDetails(List<HarvestDetail> harvestDetails) {
-        this.harvestDetails = harvestDetails;
-    }
+//    public void setHarvestDetails(List<HarvestDetail> harvestDetails) {
+//        this.harvestDetails = harvestDetails;
+//    }
 
     public int getAge() {
         if(plantingDate == null )
             return 0;
-        return (int) ChronoUnit.YEARS.between(plantingDate, LocalDate.now());
+        // calc diff between planting date and now
+        long diff = ChronoUnit.MILLIS.between(plantingDate.atStartOfDay(), LocalDate.now().atStartOfDay());
+        return (int) (diff / (1000 * 60 * 60 * 24 * 365));
     }
 
     public double getAnnualProductivityForSeason() {

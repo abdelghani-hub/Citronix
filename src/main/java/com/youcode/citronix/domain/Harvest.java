@@ -2,12 +2,21 @@ package com.youcode.citronix.domain;
 
 import com.youcode.citronix.domain.enums.Season;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
 
+
 @Entity
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
 public class Harvest {
 
     @Id
@@ -22,69 +31,14 @@ public class Harvest {
 
     private LocalDate date;
 
+
+    @ManyToOne
+    @JoinColumn(name = "field_id")
+    private Field field;
+
     @OneToMany(mappedBy = "harvest", cascade = CascadeType.ALL)
     private List<HarvestDetail> harvestDetails;
 
     @OneToMany(mappedBy = "harvest")
     private List<Sale> sales;
-
-    public Harvest() {
-    }
-
-    public Harvest(UUID id, double totalQuantity, Season season, LocalDate date, List<HarvestDetail> harvestDetails, List<Sale> sales) {
-        this.id = id;
-        this.totalQuantity = totalQuantity;
-        this.season = season;
-        this.date = date;
-        this.harvestDetails = harvestDetails;
-        this.sales = sales;
-    }
-
-    public UUID getId() {
-        return id;
-    }
-
-    public void setId(UUID id) {
-        this.id = id;
-    }
-
-    public double getTotalQuantity() {
-        return totalQuantity;
-    }
-
-    public void setTotalQuantity(double totalQuantity) {
-        this.totalQuantity = totalQuantity;
-    }
-
-    public Season getSeason() {
-        return season;
-    }
-
-    public void setSeason(Season season) {
-        this.season = season;
-    }
-
-    public LocalDate getDate() {
-        return date;
-    }
-
-    public void setDate(LocalDate date) {
-        this.date = date;
-    }
-
-    public List<HarvestDetail> getHarvestDetails() {
-        return harvestDetails;
-    }
-
-    public void setHarvestDetails(List<HarvestDetail> harvestDetails) {
-        this.harvestDetails = harvestDetails;
-    }
-
-    public List<Sale> getSales() {
-        return sales;
-    }
-
-    public void setSales(List<Sale> sales) {
-        this.sales = sales;
-    }
 }
