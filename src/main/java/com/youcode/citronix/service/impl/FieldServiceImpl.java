@@ -6,6 +6,7 @@ import com.youcode.citronix.exception.ResourceNotFoundException;
 import com.youcode.citronix.repository.FarmRepository;
 import com.youcode.citronix.repository.FieldRepository;
 import com.youcode.citronix.service.FieldService;
+import com.youcode.citronix.service.TreeService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -17,10 +18,16 @@ public class FieldServiceImpl implements FieldService {
 
     private final FieldRepository fieldRepository;
     private final FarmRepository farmRepository;
+    private TreeService treeService;
 
     public FieldServiceImpl(FieldRepository fieldRepository, FarmRepository farmRepository) {
         this.fieldRepository = fieldRepository;
         this.farmRepository = farmRepository;
+    }
+
+    // Setter injection for TreeService
+    public void setTreeService(TreeService treeService) {
+        this.treeService = treeService;
     }
 
     @Override
@@ -65,6 +72,7 @@ public class FieldServiceImpl implements FieldService {
     public void delete(UUID fieldId) {
         Field field = fieldRepository.findById(fieldId).orElseThrow(() ->
                 new ResourceNotFoundException("Field"));
+        treeService.deleteAllByField(field);
         fieldRepository.delete(field);
     }
 
@@ -72,12 +80,10 @@ public class FieldServiceImpl implements FieldService {
     public void validate(Farm farm, Field newField) {
         double totalFieldsAreaExpected = farm.getTotalFieldsArea() + newField.getArea();
 
-        // Constraint n°1
         if (newField.getArea() < 0.1) {
             throw new RuntimeException("Field area must be at least 0.1 hectares (1,000 m²)");
         }
 
-        // Constraint n°2
         if (newField.getArea() > (farm.getArea() * 0.5)) {
             throw new RuntimeException("Field area cannot exceed 50% of the farm's total area");
         }
@@ -86,7 +92,6 @@ public class FieldServiceImpl implements FieldService {
             throw new RuntimeException("Total field area must be less than the farm's total area");
         }
 
-        // Constraint n°3
         if (farm.getFields().size() >= 10) {
             throw new RuntimeException("A farm cannot have more than 10 fields");
         }
