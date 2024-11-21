@@ -26,13 +26,15 @@ public class TreeServiceImpl implements TreeService {
 
     @Override
     public Tree save(Tree tree) {
-        this.validateTreeSpacing(tree.getField(), tree);
+        this.validate(tree.getField(), tree);
         return treeRepository.save(tree);
     }
 
     @Override
     public Tree update(Tree tree, UUID treeId) {
         Tree existingTree = treeRepository.findById(treeId).orElseThrow(() -> new ResourceNotFoundException("Tree"));
+        existingTree.getField().removeTree(existingTree);
+        validate(existingTree.getField(), tree);
         existingTree.setPlantingDate(tree.getPlantingDate());
         return treeRepository.save(existingTree);
     }
@@ -67,11 +69,15 @@ public class TreeServiceImpl implements TreeService {
     }
 
     @Override
-    public void validateTreeSpacing(Field field, Tree tree) {
+    public void validate(Field field, Tree tree) {
         // Constraint n°4 : 100 Tree for 1 Hectare;
         double FieldAvailableArea = field.getArea() - (field.getTrees().size() * Field.TreeSpacingForHectare);
         if (FieldAvailableArea < Field.TreeSpacingForHectare) {
             throw new NotValidConstraintException("Field is full, you can't add more trees");
+        }
+        // Constraint n°5 : Tree Planting Season is between March and May;
+        if (tree.getPlantingDate().getMonthValue() < 3 || tree.getPlantingDate().getMonthValue() > 5) {
+            throw new NotValidConstraintException("Tree should only be planted between the months of March and May");
         }
     }
 }

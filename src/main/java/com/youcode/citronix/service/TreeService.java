@@ -5,7 +5,6 @@ import com.youcode.citronix.domain.Tree;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
-import java.util.List;
 import java.util.UUID;
 
 public interface TreeService {
@@ -17,7 +16,7 @@ public interface TreeService {
     void delete(UUID id);
     Page<Tree> findAllByField(UUID fieldId, Pageable pageable);
 
-    void validateTreeSpacing(Field field, Tree tree);
+    void validate(Field field, Tree tree);
 
     void deleteAllByField(Field filed);
 }
