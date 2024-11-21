@@ -1,0 +1,12 @@
+databaseChangeLog:
+  - changeSet:
+      id: 1732199980369-1
+      author: Youcode
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: farm_id
+            baseTableName: field
+            constraintName: FK_FIELD_ON_FARM
+            referencedColumnNames: id
+            referencedTableName: farm

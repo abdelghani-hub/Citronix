@@ -17,15 +17,6 @@ public class Field {
 
     private double area;
 
-//    @OneToMany(mappedBy = "field",
-//            cascade = {
-//                CascadeType.PERSIST,
-//                CascadeType.MERGE
-//            },
-//            fetch = FetchType.LAZY
-//    )
-//    private List<Harvest> harvests;
-
     @ManyToOne
     @JoinColumn(name = "farm_id")
     private Farm farm;
@@ -41,10 +32,9 @@ public class Field {
 
     public Field(){}
 
-    public Field(UUID id, double area, Farm farm, List<Tree> trees) { // List<Harvest> harvests,
+    public Field(UUID id, double area, Farm farm, List<Tree> trees) {
         this.id = id;
         this.area = area;
-//        this.harvests = harvests;
         this.farm = farm;
         this.trees = trees;
     }
@@ -64,14 +54,6 @@ public class Field {
     public void setArea(double area) {
         this.area = area;
     }
-
-//    public List<Harvest> getHarvests() {
-//        return harvests;
-//    }
-
-//    public void setHarvests(List<Harvest> harvests) {
-//        this.harvests = harvests;
-//    }
 
     public Farm getFarm() {
         return farm;
