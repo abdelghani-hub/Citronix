@@ -1,53 +1,41 @@
-package com.youcode.citronix.domain;
-
-import jakarta.persistence.*;
+package com.youcode.citronix.web.vm.sale;
 
 import java.time.LocalDate;
-import java.util.UUID;
 
-@Entity
-public class Sale {
+public class SaleResponseVM {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    private UUID id;
-
-    @Column(name = "unit_price")
-    private double unitPrice;
-
-    @Column(name = "client_name")
+    private String id;
+    private String unitPrice;
     private String clientName;
-
     private double quantity;
     private LocalDate date;
+    private Double revenue;
+    private String location;
 
-    @ManyToOne
-    @JoinColumn(name = "harvest_id")
-    private Harvest harvest;
-
-    public Sale() {
+    public SaleResponseVM() {
     }
 
-    public Sale(double unitPrice, String clientName, double quantity, LocalDate date) {
+    public SaleResponseVM(String unitPrice, String clientName, double quantity, LocalDate date, String location) {
         this.unitPrice = unitPrice;
         this.clientName = clientName;
         this.quantity = quantity;
         this.date = date;
+        this.location = location;
     }
 
-    public UUID getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(UUID id) {
+    public void setId(String id) {
         this.id = id;
     }
 
-    public double getUnitPrice() {
+    public String getUnitPrice() {
         return unitPrice;
     }
 
-    public void setUnitPrice(double unitPrice) {
+    public void setUnitPrice(String unitPrice) {
         this.unitPrice = unitPrice;
     }
 
@@ -75,15 +63,19 @@ public class Sale {
         this.date = date;
     }
 
-    public Harvest getHarvest() {
-        return harvest;
-    }
-
-    public void setHarvest(Harvest harvest) {
-        this.harvest = harvest;
-    }
-
     public Double getRevenue() {
-        return this.unitPrice * this.quantity;
+        return revenue;
+    }
+
+    public void setRevenue(Double revenue) {
+        this.revenue = revenue;
+    }
+
+    public String getLocation() {
+        return location;
+    }
+
+    public void setLocation(String location) {
+        this.location = location;
     }
 }
