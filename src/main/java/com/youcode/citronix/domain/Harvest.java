@@ -87,4 +87,18 @@ public class Harvest {
     public void setSales(List<Sale> sales) {
         this.sales = sales;
     }
+
+    public double getQuantitySold() {
+        return sales.stream().mapToDouble(Sale::getQuantity).sum();
+    }
+
+    public void addSale(Sale newSale) {
+        sales.add(newSale);
+    }
+
+    public void removeSale(Sale existingSale) {
+        sales.remove(existingSale);
+    }
+
+
 }
