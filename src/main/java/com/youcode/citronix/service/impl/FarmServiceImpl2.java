@@ -9,6 +9,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -58,5 +59,10 @@ public class FarmServiceImpl2 implements FarmService {
     public void delete(UUID farmId) {
         Farm farm = farmRepository.findById(farmId).orElseThrow(() -> new ResourceNotFoundException("Farm"));
         farmRepository.delete(farm);
+    }
+
+    @Override
+    public Page<Farm> filter(String name, String location, Double area, Pageable pageable) {
+        return null;
     }
 }
