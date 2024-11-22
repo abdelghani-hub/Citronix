@@ -1,6 +1,5 @@
 package com.youcode.citronix.web.api.v1.controller;
 
-
 import com.youcode.citronix.domain.Farm;
 import com.youcode.citronix.service.FarmService;
 import com.youcode.citronix.web.vm.farm.FarmEditVM;
@@ -64,5 +63,24 @@ public class FarmController {
         Page<Farm> farms = farmService.findAll(pageable);
         Page<FarmResponseVM> farmResponseVM = farms.map(farmVmMapper::toResponseVM);
         return new ResponseEntity<>(farmResponseVM , HttpStatus.OK);
+    }
+
+    // Search
+
+    @GetMapping("/filter")
+    public ResponseEntity<Page<FarmResponseVM>> filterUsers(
+            @RequestParam(required = false) String name,
+            @RequestParam(required = false) String location,
+            @RequestParam(required = false) Double area,
+            Pageable pageable
+    ) {
+        Page<Farm> filteredUsers = farmService.filter(
+                name,
+                location,
+                area,
+                pageable
+        );
+        Page<FarmResponseVM> page = filteredUsers.map(farmVmMapper::toResponseVM);
+        return new ResponseEntity<>(page, HttpStatus.OK);
     }
 }

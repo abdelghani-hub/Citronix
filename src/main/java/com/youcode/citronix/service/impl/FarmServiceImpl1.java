@@ -7,8 +7,10 @@ import com.youcode.citronix.exception.ResourceNotFoundException;
 import com.youcode.citronix.repository.FarmRepository;
 import com.youcode.citronix.service.FarmService;
 import com.youcode.citronix.service.FieldService;
+import com.youcode.citronix.specification.FarmSpecification;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -92,5 +94,14 @@ public class FarmServiceImpl1 implements FarmService {
         Farm farm = farmRepository.findById(farmId).orElseThrow(() -> new ResourceNotFoundException("Farm"));
         farm.getFields().forEach(field -> fieldService.delete(field.getId()));
         farmRepository.delete(farm);
+    }
+
+
+
+    @Override
+    public Page<Farm> filter(String name, String location, Double area, Pageable pageable) {
+        Specification<Farm> specification = FarmSpecification.filterFarm(name, location, area);
+        Page<Farm> farms = farmRepository.findAll(specification, pageable);
+        return farms;
     }
 }
