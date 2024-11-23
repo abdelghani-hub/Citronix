@@ -1,6 +1,7 @@
 package com.youcode.citronix.service.impl;
 
 import com.youcode.citronix.domain.Farm;
+import com.youcode.citronix.domain.Field;
 import com.youcode.citronix.exception.AlreadyExistException;
 import com.youcode.citronix.exception.ResourceNotFoundException;
 import com.youcode.citronix.repository.FarmRepository;
@@ -12,6 +13,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -33,7 +35,8 @@ public class FarmServiceImpl2 implements FarmService {
         if (farmOptional.isPresent()) {
             throw new AlreadyExistException("Name", farm.getName());
         }
-        if(farm.getFields() != null || !farm.getFields().isEmpty()){
+
+        if (farm.getFields() != null && !farm.getFields().isEmpty()){
             throw new RuntimeException("Farm must not have any field");
         }
 
