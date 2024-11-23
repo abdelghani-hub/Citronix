@@ -4,7 +4,6 @@ import com.youcode.citronix.domain.Farm;
 import com.youcode.citronix.domain.Field;
 import com.youcode.citronix.service.FarmService;
 import com.youcode.citronix.service.FieldService;
-import com.youcode.citronix.web.vm.field.FieldEditVM;
 import com.youcode.citronix.web.vm.field.FieldResponseVM;
 import com.youcode.citronix.web.vm.field.FieldVM;
 import com.youcode.citronix.web.vm.mapper.FieldVmMapper;
@@ -45,10 +44,10 @@ public class FieldController {
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
-    @PutMapping("/update")
-    public ResponseEntity<FieldResponseVM> update(@RequestBody @Valid FieldEditVM fieldEditVM) {
-        Field field = fieldVmMapper.toEntity(fieldEditVM);
-        Field updatedField = fieldService.update(field);
+    @PutMapping("/update/{fieldId}")
+    public ResponseEntity<FieldResponseVM> update(@RequestBody @Valid FieldVM fieldVM, @PathVariable UUID fieldId) {
+        Field field = fieldVmMapper.toEntity(fieldVM);
+        Field updatedField = fieldService.update(field, fieldId);
         FieldResponseVM fieldResponseVM = fieldVmMapper.toFieldResponseVM(updatedField);
         return new ResponseEntity<>(fieldResponseVM, HttpStatus.OK);
     }

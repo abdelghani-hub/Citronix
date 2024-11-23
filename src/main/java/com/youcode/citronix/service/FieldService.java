@@ -10,7 +10,7 @@ import java.util.UUID;
 public interface FieldService {
 
     Field save(Field farm);
-    Field update(Field farm);
+    Field update(Field farm, UUID id);
     Field findById(UUID id);
     Page<Field> findAll(Pageable pageable);
     void delete(UUID id);

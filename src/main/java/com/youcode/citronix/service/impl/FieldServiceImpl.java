@@ -37,8 +37,8 @@ public class FieldServiceImpl implements FieldService {
     }
 
     @Override
-    public Field update(Field field) {
-        Field existingField = fieldRepository.findById(field.getId()).orElseThrow(() ->
+    public Field update(Field field, UUID id) {
+        Field existingField = fieldRepository.findById(id).orElseThrow(() ->
                 new ResourceNotFoundException("Field"));
 
         Farm farm = existingField.getFarm();
