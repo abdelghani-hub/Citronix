@@ -2,6 +2,7 @@ package com.youcode.citronix.service.impl;
 
 import com.youcode.citronix.domain.Farm;
 import com.youcode.citronix.domain.Field;
+import com.youcode.citronix.exception.NotValidConstraintException;
 import com.youcode.citronix.exception.ResourceNotFoundException;
 import com.youcode.citronix.repository.FarmRepository;
 import com.youcode.citronix.repository.FieldRepository;
@@ -43,6 +44,9 @@ public class FieldServiceImpl implements FieldService {
 
         Farm farm = existingField.getFarm();
         farm.removeField(existingField);
+        if (field.getArea() < existingField.getTrees().stream().mapToDouble(t->Field.TreeSpacingForHectare).sum()) {
+            throw new NotValidConstraintException("Field area cannot be less than the sum of the trees' spacing!");
+        }
         validate(farm, field);
         farm.addField(field);
 
