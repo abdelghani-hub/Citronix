@@ -11,7 +11,7 @@ import java.util.UUID;
 public interface FarmService {
 
     Farm save(Farm farm);
-    Farm update(Farm farm);
+    Farm update(Farm farm, UUID id);
     Farm findById(UUID id);
     Page<Farm> findAll(Pageable pageable);
     void delete(UUID id);

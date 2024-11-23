@@ -2,7 +2,6 @@ package com.youcode.citronix.web.api.v1.controller;
 
 import com.youcode.citronix.domain.Farm;
 import com.youcode.citronix.service.FarmService;
-import com.youcode.citronix.web.vm.farm.FarmEditVM;
 import com.youcode.citronix.web.vm.farm.FarmResponseVM;
 import com.youcode.citronix.web.vm.farm.FarmVM;
 import com.youcode.citronix.web.vm.mapper.FarmVmMapper;
@@ -37,10 +36,10 @@ public class FarmController {
         return new ResponseEntity<>(farmResponseVM , HttpStatus.CREATED);
     }
 
-    @PutMapping("/update")
-    public ResponseEntity<FarmResponseVM> update(@RequestBody @Valid FarmEditVM farmEditVM){
-        Farm farm = farmVmMapper.toEntity(farmEditVM);
-        Farm updatedFarm = farmService.update(farm);
+    @PutMapping("/update/{farm_id}")
+    public ResponseEntity<FarmResponseVM> update(@RequestBody @Valid FarmVM farmVM, @PathVariable UUID farm_id){
+        Farm farm = farmVmMapper.toEntity(farmVM);
+        Farm updatedFarm = farmService.update(farm, farm_id);
         FarmResponseVM farmResponseVM = farmVmMapper.toResponseVM(updatedFarm);
         return new ResponseEntity<>(farmResponseVM , HttpStatus.OK);
     }

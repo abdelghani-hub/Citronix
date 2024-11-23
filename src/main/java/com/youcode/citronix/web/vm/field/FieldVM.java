@@ -3,7 +3,6 @@ package com.youcode.citronix.web.vm.field;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Positive;
 
-
 public class FieldVM {
 
     @NotBlank(message = "FarmId is required.")

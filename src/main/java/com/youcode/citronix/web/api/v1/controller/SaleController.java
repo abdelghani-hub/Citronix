@@ -38,7 +38,6 @@ public class SaleController {
         sale.setHarvest(saleHarvest);
         Sale savedSale = saleService.save(sale);
         SaleResponseVM response = saleVmMapper.toSaleResponseVM(savedSale);
-        response.setLocation("/api/v1/sales/" + savedSale.getId());
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
@@ -49,7 +48,6 @@ public class SaleController {
         sale.setHarvest(saleHarvest);
         Sale updatedSale = saleService.update(sale, saleId);
         SaleResponseVM response = saleVmMapper.toSaleResponseVM(updatedSale);
-        response.setLocation("/api/v1/sales/" + updatedSale.getId());
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
@@ -57,7 +55,6 @@ public class SaleController {
     public ResponseEntity<SaleResponseVM> findById(@PathVariable UUID saleId) {
         Sale sale = saleService.findById(saleId);
         SaleResponseVM saleResponseVM = saleVmMapper.toSaleResponseVM(sale);
-        saleResponseVM.setLocation("/api/v1/sales/" + sale.getId());
         return new ResponseEntity<>(saleResponseVM, HttpStatus.OK);
     }
 
@@ -65,11 +62,7 @@ public class SaleController {
     public ResponseEntity<Page<SaleResponseVM>> findAllByFarm(Pageable pageable) {
         Page<Sale> sales = saleService.findAll(pageable);
         Page<SaleResponseVM> salesResponseVMs = sales.map(
-                s->{
-                    SaleResponseVM saleResponseVM = saleVmMapper.toSaleResponseVM(s);
-                    saleResponseVM.setLocation("/api/v1/sales/" + s.getId());
-                    return saleResponseVM;
-                }
+                s -> saleVmMapper.toSaleResponseVM(s)
         );
         return new ResponseEntity<>(salesResponseVMs, HttpStatus.OK);
     }
