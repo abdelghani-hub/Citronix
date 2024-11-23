@@ -5,7 +5,6 @@ import com.youcode.citronix.domain.Tree;
 import com.youcode.citronix.service.FieldService;
 import com.youcode.citronix.service.TreeService;
 import com.youcode.citronix.web.vm.mapper.TreeVmMapper;
-import com.youcode.citronix.web.vm.tree.TreeEditVM;
 import com.youcode.citronix.web.vm.tree.TreeResponseVM;
 import com.youcode.citronix.web.vm.tree.TreeVM;
 import jakarta.validation.Valid;
@@ -44,8 +43,8 @@ public class TreeController {
     }
 
     @PutMapping("/update/{treeId}")
-    public ResponseEntity<TreeResponseVM> update(@RequestBody @Valid TreeEditVM treeEditVM, @PathVariable UUID treeId) {
-        Tree tree = treeVmMapper.toEntity(treeEditVM);
+    public ResponseEntity<TreeResponseVM> update(@RequestBody @Valid TreeVM treeVM, @PathVariable UUID treeId) {
+        Tree tree = treeVmMapper.toEntity(treeVM);
         Tree updatedTree = treeService.update(tree, treeId);
         TreeResponseVM treeResponseVM = treeVmMapper.toTreeResponseVM(updatedTree);
         return new ResponseEntity<>(treeResponseVM, HttpStatus.OK);

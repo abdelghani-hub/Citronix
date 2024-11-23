@@ -62,8 +62,8 @@ public class FarmServiceImpl1 implements FarmService {
     }
 
     @Override
-    public Farm update(Farm farm) {
-        Farm farmToUpdate = farmRepository.findById(farm.getId()).orElseThrow(() -> new RuntimeException("Farm not found"));
+    public Farm update(Farm farm, UUID id) {
+        Farm farmToUpdate = farmRepository.findById(id).orElseThrow(() -> new RuntimeException("Farm not found"));
         farmToUpdate.setName(farm.getName());
         farmToUpdate.setLocation(farm.getLocation());
         farmToUpdate.setArea(farm.getArea());
