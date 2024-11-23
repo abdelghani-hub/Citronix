@@ -66,6 +66,7 @@ public class SaleVmMapperImpl implements SaleVmMapper {
             saleResponseVM.setQuantity(sale.getQuantity());
             saleResponseVM.setDate(sale.getDate());
             saleResponseVM.setRevenue(sale.getRevenue());
+            saleResponseVM.setLocation("/sales/" + sale.getId());
             return saleResponseVM;
         }
     }
