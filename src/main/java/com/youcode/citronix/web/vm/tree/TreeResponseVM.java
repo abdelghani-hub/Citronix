@@ -1,27 +1,30 @@
 package com.youcode.citronix.web.vm.tree;
 
 import java.time.LocalDate;
-import java.util.UUID;
 
 public class TreeResponseVM {
 
-    private UUID fieldId;
+    private String id;
+    private String fieldId;
     private LocalDate plantingDate;
     private String farmName;
 
     public TreeResponseVM() {
     }
 
-    public TreeResponseVM(UUID fieldId, LocalDate plantingDate) {
-        this.fieldId = fieldId;
-        this.plantingDate = plantingDate;
+    public String getId() {
+        return id;
     }
 
-    public UUID getFieldId() {
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getFieldId() {
         return fieldId;
     }
 
-    public void setFieldId(UUID fieldId) {
+    public void setFieldId(String fieldId) {
         this.fieldId = fieldId;
     }
 

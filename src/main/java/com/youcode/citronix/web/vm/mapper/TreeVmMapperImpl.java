@@ -1,7 +1,6 @@
 package com.youcode.citronix.web.vm.mapper;
 
 import com.youcode.citronix.domain.Tree;
-import com.youcode.citronix.web.vm.tree.TreeEditVM;
 import com.youcode.citronix.web.vm.tree.TreeResponseVM;
 import com.youcode.citronix.web.vm.tree.TreeVM;
 import org.springframework.stereotype.Component;
@@ -17,19 +16,6 @@ public class TreeVmMapperImpl implements TreeVmMapper {
         } else {
             Tree tree = new Tree();
             tree.setPlantingDate(treeVM.getPlantingDate());
-            return tree;
-        }
-    }
-
-    public Tree toEntity(TreeEditVM treeEditVM) {
-        if (treeEditVM == null) {
-            return null;
-        } else {
-            Tree tree = new Tree();
-            if (treeEditVM.getPlantingDate() != null) {
-                tree.setPlantingDate(treeEditVM.getPlantingDate());
-            }
-
             return tree;
         }
     }
@@ -55,26 +41,14 @@ public class TreeVmMapperImpl implements TreeVmMapper {
         }
     }
 
-    public TreeEditVM toTreeEditVM(Tree tree) {
-        if (tree == null) {
-            return null;
-        } else {
-            TreeEditVM treeEditVM = new TreeEditVM();
-            if (tree.getPlantingDate() != null) {
-                treeEditVM.setPlantingDate(tree.getPlantingDate());
-            }
-
-            return treeEditVM;
-        }
-    }
-
     public TreeResponseVM toTreeResponseVM(Tree tree) {
         if (tree == null) {
             return null;
         } else {
             TreeResponseVM treeResponseVM = new TreeResponseVM();
+            treeResponseVM.setId(tree.getId().toString());
             treeResponseVM.setPlantingDate(tree.getPlantingDate());
-            treeResponseVM.setFieldId(tree.getField().getId());
+            treeResponseVM.setFieldId(tree.getField().getId().toString());
             treeResponseVM.setFarmName(tree.getField().getFarm().getName());
             return treeResponseVM;
         }
