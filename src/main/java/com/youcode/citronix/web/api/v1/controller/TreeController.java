@@ -44,7 +44,9 @@ public class TreeController {
 
     @PutMapping("/update/{treeId}")
     public ResponseEntity<TreeResponseVM> update(@RequestBody @Valid TreeVM treeVM, @PathVariable UUID treeId) {
+        Field field = fieldService.findById(UUID.fromString(treeVM.getFieldId()));
         Tree tree = treeVmMapper.toEntity(treeVM);
+        tree.setField(field);
         Tree updatedTree = treeService.update(tree, treeId);
         TreeResponseVM treeResponseVM = treeVmMapper.toTreeResponseVM(updatedTree);
         return new ResponseEntity<>(treeResponseVM, HttpStatus.OK);
