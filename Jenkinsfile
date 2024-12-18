@@ -4,7 +4,7 @@ pipeline {
     stages {
         stage('Hello') {
             steps {
-                echo 'Hello world! this is my first jenkins pipeline.'
+                echo 'Hello world! this is my first jenkins pipeline'
             }
         }
     }
