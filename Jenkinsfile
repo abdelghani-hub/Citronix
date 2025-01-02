@@ -10,15 +10,26 @@ pipeline {
             }
         }
 
-        stage('Build') {
+        stage('Build and SonarQube Analysis') {
             steps {
-                sh 'mvn clean package -DskipTests'
+                echo "Running Maven build and SonarQube analysis..."
+                withSonarQubeEnv('MySonarQubeServer') {
+                    sh """
+                    mvn clean package sonar:sonar
+                    """
+                }
             }
         }
-
-        stage('Test') {
+        stage('Quality Gate Check') {
             steps {
-                sh 'mvn test'
+                script {
+                    echo "Waiting for SonarQube Quality Gate..."
+                    def qualityGate = waitForQualityGate()
+                    if (qualityGate.status != 'OK') {
+                        error "Quality Gate failed ❌❌❌ Stopping the build."
+                    }
+                    echo "Quality Gate passed ✔️✔️✔️ Proceeding..."
+                }
             }
             post {
                 always {
