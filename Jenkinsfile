@@ -106,12 +106,4 @@ pipeline {
             }
         }
     }
-    post {
-        failure {
-            echo 'Pipeline failed! Sending notifications...'
-        }
-        success {
-            echo 'Pipeline succeeded! Deployment completed.'
-        }
-    }
 } */
