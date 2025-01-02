@@ -8,4 +8,9 @@ services:
       - 'POSTGRES_PASSWORD=password'
       - 'POSTGRES_USER=citronix'
     ports:
-      - '5433:5432'
+      - '5432:5432'
+    volumes:
+      - citronix_db:/var/lib/postgresql/data
+
+volumes:
+    citronix_db:

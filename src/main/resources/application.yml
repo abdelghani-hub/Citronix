@@ -1,5 +1,11 @@
 spring:
 
+  datasource:
+    url: jdbc:postgresql://localhost:5432/citronix
+    username: citronix
+    password: password
+    driver-class-name: org.postgresql.Driver
+
   docker:
     compose:
       enabled: true
