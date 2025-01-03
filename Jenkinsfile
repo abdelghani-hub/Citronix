@@ -37,6 +37,27 @@ pipeline {
                 }
             }
         }
+        stage('Pre Deploy') {
+            steps {
+                script {
+                    echo "Deploying Docker container..."
+                    sh """
+                    docker-compose down || true
+                    docker rmi citronix:latest || true
+                    """
+                }
+            }
+        }
+        stage('Deploy'){
+            steps{
+                script {
+                    echo "Deploying Docker container..."
+                    sh """
+                        docker-compose up -d
+                    """
+                }
+            }
+        }
     }
 
     post {
