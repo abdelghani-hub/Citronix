@@ -9,7 +9,7 @@ spring:
   docker:
     compose:
       enabled: true
-      file: src/main/docker/compose.yaml
+      file: compose.yaml
       lifecycle-management: start_only
 
   jpa:
